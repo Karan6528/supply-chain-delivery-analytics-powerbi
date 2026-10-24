@@ -1,126 +1,91 @@
-# Why are our deliveries late, and what is it costing us?
+# Supply Chain Delivery Analytics (Power BI)
 
-A Power BI project on delivery and stock problems at an online retailer.
+![Overview page](images/01_overview.png)
 
-![Executive overview](images/01_overview.png)
+## Why I built this
 
-## The problem
+I order a lot of stuff online, and late parcels annoy me more than they should. At some point I started wondering what a late delivery actually costs the shop. Not just the refund, but the bad review, the voucher they send to say sorry, and the fact that I probably won't order from them again.
 
-Anyone who has ordered something online knows the feeling. The site says "arrives Tuesday", Tuesday comes and goes, and by Thursday you've already decided not to order from them again.
+So I picked that as my Power BI project. The idea was to build the kind of report an operations manager would actually open on a Monday morning and use to answer three questions:
 
-For the shop, that one late parcel doesn't look like much. But it adds up: refunds, cancelled orders, angry reviews, vouchers handed out as an apology, and customers who quietly never come back. On top of that, if the item is out of stock in the first place, the sale never happens at all.
+- Where do the late deliveries come from? (carrier, warehouse, time of year)
+- How much are they really costing us?
+- Why do we keep running out of stock on some products?
 
-I wanted to build a dashboard that a real operations manager could open on Monday morning and answer three questions:
+## About the data
 
-1. Where are the late deliveries coming from: which carrier, which warehouse, which time of year?
-2. What do they actually cost us, including the costs nobody puts on an invoice?
-3. Where are we losing sales because products are out of stock, and why does it keep happening?
+I couldn't get real order data from a company, so I made my own. The company is called UrbanCart GmbH. It's a fake online shop in Germany with 5 warehouses (Berlin, Hamburg, Munich, Frankfurt, Leipzig) and 4 delivery partners. The carrier names are made up too.
 
-## The company
-
-UrbanCart GmbH is a made-up German online shop (electronics, home, fashion, beauty, sports, books). It ships from five warehouses (Berlin, Hamburg, Munich, Frankfurt and Leipzig) using four delivery partners, from premium to budget.
-
-I couldn't get real order data from a company, so I wrote a Python script that generates two years of it (2024 and 2025): about 46,000 orders, 6,000 customers, 120 products and weekly stock levels. I didn't want random noise, so the data is built around problems I've read about again and again in supply chain case studies: a cheap carrier that cuts corners, a warehouse that can't handle Christmas, and stock planning based on numbers that are out of date. The dashboard's job is to find them.
-
-The carrier names are invented too, so nothing here is a comment on a real company.
+I wrote a Python script (`scripts/generate_data.py`) that creates 2 years of data: about 46k orders, 6k customers, 120 products and weekly stock levels. I didn't want completely random numbers, so I built in a few problems that come up a lot in supply chain case studies, and then used the dashboard to see if they showed up clearly. They did.
 
 ## What I found
 
-**1. The cheapest carrier is not the cheapest.**
-CargoWay charges about €4 per parcel, half of what the premium option costs. But nearly 1 in 4 of its parcels arrive late (23.7%), compared to 7–12% for the others. Once I added the refunds, cancellations and apology vouchers that come with those late parcels, CargoWay works out at about €11 per order. That's more than NordLogistik (€9.28) and roughly the same as the premium carrier.
+**The cheapest carrier ends up being one of the most expensive.**
+CargoWay only charges around €4 per parcel, so on paper it's the best deal. But almost 1 in 4 of its parcels arrive late. When I added the refunds, cancellations and €5 apology vouchers that come with those late parcels, the real cost came to €11.04 per order. NordLogistik charges €6 but its real cost is only €9.28.
 
-| Carrier | Shipping cost / order | Late deliveries | True cost / order |
+| Carrier | Price per parcel | On time | Real cost per order |
 |---|---|---|---|
-| SwiftFreight (premium) | €8.82 | 7.3% | €11.11 |
-| NordLogistik | €6.04 | 9.9% | €9.28 |
-| ExpressLine | €5.71 | 11.8% | €9.50 |
-| CargoWay (budget) | €4.02 | 23.7% | €11.04 |
+| SwiftFreight | €8.82 | 92.7% | €11.11 |
+| NordLogistik | €6.04 | 90.1% | €9.28 |
+| ExpressLine | €5.71 | 88.2% | €9.50 |
+| CargoWay | €4.02 | 76.3% | €11.04 |
 
-**2. Leipzig falls apart every Christmas.**
-For most of the year all five warehouses deliver on time about 88% of the time. In November and December the others slip to around 83–84%, which is expected. Leipzig drops to 63%. It has roughly half the daily capacity of the other sites but still gets half of the East region's orders, and the heatmap on page 2 makes the problem very hard to miss.
+**Leipzig can't handle Christmas.**
+Most of the year every warehouse is around 88% on time. In November and December all of them get a bit worse, but Leipzig drops to 63%. It has about half the capacity of the other sites and still gets half of the orders from East Germany. You can see it straight away in the heatmap on the Delivery page.
 
-**3. Late parcels lose customers, not just orders.**
-Reviews go from 4.4 stars for on-time orders down to 2.3 when a parcel is 5+ days late, and returns almost triple. More importantly, customers who had a bad delivery (3+ days late or cancelled) were much less likely to order again within 90 days: 67% versus 80% for everyone else. Over the two years that's around 3,000 bad experiences, and the follow-up orders lost from them are worth roughly €70k by my estimate. That's on top of the €195k already lost to refunds, cancellations and apology vouchers.
+**Late parcels cost customers, not just money.**
+On-time orders get 4.4 stars on average. Orders that are 5+ days late get 2.3. Returns go up a lot too. The part I found most interesting: customers who had a really bad delivery (3+ days late or cancelled) were less likely to order again within 90 days, 67% compared to 80%.
 
-**4. Electronics keep running out because the system has the wrong lead times.**
-Overall we fill 91% of demand from stock. Electronics only manage 65%. The reason turned out to be simple: the stock planning system assumes suppliers deliver in 9 days, but electronics suppliers actually take around 31. So reorders go out far too late, every single time. Electronics account for €1.14M of the €1.54M in sales lost to stockouts.
+**Electronics keep running out because the planning numbers are wrong.**
+Overall the shop can serve about 91% of demand from stock, but electronics only manage about 65%. The reason was simple once I found it. The planning system assumes suppliers deliver in 9 days, but electronics suppliers actually take around 31. So every reorder goes out too late. Electronics make up €1.14M of the €1.54M in sales lost to empty shelves.
 
-## What I would recommend
+## What I'd suggest
 
-- **Move volume away from CargoWay**, at least for the East region and for peak season. Moving all of it to NordLogistik would save about €11k a year in direct costs and avoid close to 900 late parcels a year, before counting the customers you keep.
-- **Fix Leipzig's peak season** by sending more of the East region's November–December orders through Berlin, or by adding temporary staff from late October.
-- **Update the supplier lead times in the planning system**, starting with electronics. This is the cheapest fix in the whole project and has the biggest money attached to it.
-- **Treat "3+ days late" as a customer retention problem**, not just a logistics one, for example with a proactive message and voucher before the customer complains.
+1. Stop using CargoWay so much, especially in peak season. NordLogistik is cheaper once you count the late deliveries.
+2. Help Leipzig in November and December, either by routing some East orders through Berlin or by adding temporary staff.
+3. Fix the supplier lead times in the planning system, starting with electronics. It's probably the easiest fix here and it has the most money attached to it.
 
-## The dashboard
+## The report
 
-Five pages, each answering one question:
+There are 5 pages:
 
-| Page | Question it answers |
-|---|---|
-| 1. Executive Overview | How are we doing, and what is lateness costing us? |
-| 2. Delivery Performance | Where do late deliveries come from? |
-| 3. Cost & Carriers | Is the cheapest carrier actually cheapest? |
-| 4. Customer Impact | Do late parcels hurt reviews, returns and repeat orders? |
-| 5. Inventory & Stockouts | Where are we losing sales to empty shelves, and why? |
+1. **Overview**: the main KPIs, the on-time trend and the key findings
+2. **Delivery**: carriers and warehouses compared, plus a heatmap by month
+3. **Cost**: the real cost per carrier once lateness is included
+4. **Customers**: reviews, returns and repeat orders by how late the parcel was
+5. **Inventory**: lost sales by category and why they happen
 
 | | |
 |---|---|
 | ![Delivery](images/02_delivery.png) | ![Cost](images/03_cost.png) |
 | ![Customers](images/04_customers.png) | ![Inventory](images/05_inventory.png) |
 
-## How it's built
+## How I built it
 
-**Data model.** A standard star schema with two fact tables (orders and weekly inventory) sharing the same product, warehouse and date tables.
+- **Python** to generate the data, and a second script (`scripts/validate_kpis.py`) to recalculate the main numbers so I could check my DAX was right.
+- **Power Query** to load and clean the CSVs. One thing I learned the hard way: on a German Windows setup Power BI reads "7.90" as 790, so every type change uses the en-US locale.
+- **Data model**: a star schema with two fact tables (orders and weekly inventory) and shared tables for products, warehouses, carriers, customers and dates.
+- **DAX**: around 45 measures. The ones I spent the most time on were `True Cost per Order`, `Reorder Rate 90d` and `Lost Sales Revenue`.
 
-```mermaid
-erDiagram
-    Orders ||--o{ OrderLines : contains
-    Products ||--o{ OrderLines : "sold as"
-    Customers ||--o{ Orders : places
-    Warehouses ||--o{ Orders : ships
-    Carriers ||--o{ Orders : delivers
-    Date ||--o{ Orders : "order date"
-    Products ||--o{ Inventory : stocked
-    Warehouses ||--o{ Inventory : holds
-    Date ||--o{ Inventory : "week start"
-```
+All the Power Query and DAX code is in the `powerbi/` folder if you want to look at it without opening the .pbix.
 
-**Power Query** does the cleaning: fixing data types (including a decimal separator issue that bites on German Windows settings), working out how many days late each order was, and sorting orders into delay buckets.
-
-**DAX** does the rest. There are about 45 measures, grouped into sales, delivery, cost, customer and inventory. A few I'm happy with:
-
-- `True Cost per Order`: shipping price plus the hidden cost of that carrier's lateness
-- `Reorder Rate 90d`: did the customer come back within 90 days, ignoring the last 90 days of data where we can't know yet
-- `Lost Sales Revenue`: units we couldn't sell because of stock-outs, valued at each product's price
-
-Before trusting any number in the report, I recalculated the main KPIs in Python (`scripts/validate_kpis.py`) and checked the DAX gives the same answer.
-
-## Repo layout
+## Folder structure
 
 ```
-data/                    the 7 CSV files used by the report
-scripts/
-  generate_data.py       creates the dataset (fixed seed, so you get the same numbers)
-  validate_kpis.py       recalculates the KPIs in pandas to check the DAX
-powerbi/
-  UrbanCart_SupplyChain.pbix
-  power-query/           M code for each table
-  dax/                   date table, calculated columns, all measures
-  urbancart_theme.json   report colours and fonts
-docs/
-  BUILD_GUIDE.md         how to rebuild the report step by step
-  DATA_DICTIONARY.md     every table and column explained
-images/                  dashboard screenshots
+data/         7 CSV files used by the report
+scripts/      Python scripts to create the data and check the numbers
+powerbi/      the .pbix file, Power Query code, DAX measures, theme
+docs/         step-by-step build guide and data dictionary
+images/       screenshots of the report
 ```
 
-## Running it yourself
+## How to open it
 
 1. Download or clone this repo.
-2. Open `powerbi/UrbanCart_SupplyChain.pbix` in Power BI Desktop (free, Windows).
-3. If it can't find the data, go to **Transform data → Edit parameters** and point `DataFolder` at your local `data` folder.
+2. Open `powerbi/UrbanCart_SupplyChain.pbix` in Power BI Desktop (it's free).
+3. If it can't find the data, go to **Transform data → Edit parameters** and change `DataFolder` to wherever you saved the `data` folder.
 
-To regenerate the data or check the numbers:
+If you want to recreate the data yourself:
 
 ```bash
 pip install pandas numpy
@@ -128,16 +93,14 @@ python scripts/generate_data.py
 python scripts/validate_kpis.py
 ```
 
-If you'd like to build the report from scratch, [docs/BUILD_GUIDE.md](docs/BUILD_GUIDE.md) walks through it.
+## Things I'd like to add
 
-## What I'd do next
-
-- Connect it to a live database instead of CSV files, with scheduled refresh in the Power BI service
-- Add row-level security so each warehouse manager only sees their own site
-- Build a simple forecast of late-delivery risk per order using the same features
+- Connect it to a real database instead of CSV files
+- Row-level security so each warehouse manager only sees their own site
+- A simple model that predicts which orders are likely to be late
 
 ## About me
 
-I'm Karan Lodha, an MSc Data Science, AI & Digital Business student at Gisma University of Applied Sciences in Berlin. I'm interested in using data to fix the unglamorous problems that cost businesses real money. If you have feedback on this project, I'd genuinely like to hear it.
+I'm Karan, doing my MSc in Data Science, AI & Digital Business at Gisma in Berlin. If you have any feedback on this project, I'd really like to hear it.
 
 [LinkedIn](https://www.linkedin.com/in/karanlodha/) · [GitHub](https://github.com/Karan6528)
