@@ -1,0 +1,238 @@
+// =====================================================================
+// MEASURES
+// Create an empty table to hold them: Home > Enter data > name it "_Measures" > Load.
+// Add each measure with Modeling > New measure, then set its Display folder
+// (Model view > Properties) to the folder named in the section header.
+// Format hints are in [brackets] after each measure name.
+// =====================================================================
+
+
+// ---------------------------------------------------------------------
+// Folder: 1 Sales
+// ---------------------------------------------------------------------
+
+Net Sales =                                   // [Currency €, 0 dp]
+SUM ( OrderLines[Line Net Sales] )
+
+COGS =                                        // [Currency €, 0 dp]
+SUM ( OrderLines[Line COGS] )
+
+Gross Margin =                                // [Currency €, 0 dp]
+[Net Sales] - [COGS]
+
+Gross Margin % =                              // [Percentage, 1 dp]
+DIVIDE ( [Gross Margin], [Net Sales] )
+
+Total Orders =                                // [Whole number]
+COUNTROWS ( Orders )
+
+Units Sold =                                  // [Whole number]
+SUM ( OrderLines[quantity] )
+
+Avg Order Value =                             // [Currency €, 2 dp]
+DIVIDE ( [Net Sales], [Total Orders] )
+
+Net Sales LY =                                // [Currency €, 0 dp]
+CALCULATE ( [Net Sales], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+
+Net Sales YoY % =                             // [Percentage, 1 dp]
+DIVIDE ( [Net Sales] - [Net Sales LY], [Net Sales LY] )
+
+
+// ---------------------------------------------------------------------
+// Folder: 2 Delivery
+// ---------------------------------------------------------------------
+
+Delivered Orders =                            // [Whole number]  (excludes cancelled)
+CALCULATE ( [Total Orders], Orders[order_status] <> "Cancelled" )
+
+On-Time Orders =
+CALCULATE ( [Total Orders], Orders[Delivery Status] = "On Time" )
+
+Late Orders =
+CALCULATE ( [Total Orders], Orders[Delivery Status] = "Late" )
+
+On-Time Delivery % =                          // [Percentage, 1 dp]  headline OTD KPI
+DIVIDE ( [On-Time Orders], [Delivered Orders] )
+
+Late Delivery % =                             // [Percentage, 1 dp]
+DIVIDE ( [Late Orders], [Delivered Orders] )
+
+OTD Target =                                  // [Percentage]  used as a reference line
+0.92
+
+OTD Gap to Target (pp) =                      // [Decimal, 1 dp]
+( [On-Time Delivery %] - [OTD Target] ) * 100
+
+On-Time Delivery % LY =
+CALCULATE ( [On-Time Delivery %], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+
+Avg Days Late (Late Orders) =                 // [Decimal, 1 dp]
+CALCULATE ( AVERAGE ( Orders[Delay Days] ), Orders[Delivery Status] = "Late" )
+
+Avg Delivery Days =                           // [Decimal, 1 dp]
+AVERAGE ( Orders[Delivery Days] )
+
+Cancellation Rate % =                         // [Percentage, 1 dp]
+DIVIDE ( CALCULATE ( [Total Orders], Orders[order_status] = "Cancelled" ), [Total Orders] )
+
+Return Rate % =                               // [Percentage, 1 dp]
+DIVIDE ( CALCULATE ( [Total Orders], Orders[order_status] = "Returned" ), [Total Orders] )
+
+Avg Review Score =                            // [Decimal, 2 dp]
+AVERAGE ( Orders[review_score] )
+
+Peak Season OTD % =
+CALCULATE ( [On-Time Delivery %], 'Date'[Season] = "Peak (Nov-Dec)" )
+
+Regular Season OTD % =
+CALCULATE ( [On-Time Delivery %], 'Date'[Season] = "Regular (Jan-Oct)" )
+
+Peak Season OTD Drop (pp) =                   // [Decimal, 1 dp]  > shows which warehouse breaks under load
+( [Regular Season OTD %] - [Peak Season OTD %] ) * 100
+
+
+// ---------------------------------------------------------------------
+// Folder: 3 Cost of Late Delivery
+// ---------------------------------------------------------------------
+
+Shipping Cost =                               // [Currency €, 0 dp]
+SUM ( Orders[shipping_cost_eur] )
+
+Shipping Cost per Order =                     // [Currency €, 2 dp]
+DIVIDE ( [Shipping Cost], [Total Orders] )
+
+Late Compensation =                           // [Currency €, 0 dp]  €5 vouchers for 3+ days late
+SUM ( Orders[late_compensation_eur] )
+
+Revenue Lost to Late Deliveries =             // [Currency €, 0 dp]
+// Sales refunded on orders that were late (or cancelled before arriving)
+CALCULATE (
+    [Net Sales],
+    Orders[Is Late Or Cancelled] = TRUE (),
+    Orders[order_status] IN { "Cancelled", "Returned" }
+)
+
+Cost of Late Delivery =                       // [Currency €, 0 dp]
+[Revenue Lost to Late Deliveries] + [Late Compensation]
+
+Late Cost per Order =                         // [Currency €, 2 dp]
+DIVIDE ( [Cost of Late Delivery], [Total Orders] )
+
+True Cost per Order =                         // [Currency €, 2 dp]
+// Shipping price + the hidden cost of that carrier's lateness
+[Shipping Cost per Order] + [Late Cost per Order]
+
+
+// ---------------------------------------------------------------------
+// Folder: 4 Customer Impact
+// ---------------------------------------------------------------------
+
+Customers =                                   // [Whole number]
+DISTINCTCOUNT ( Orders[customer_id] )
+
+Reorder Rate 90d =                            // [Percentage, 1 dp]
+// Share of orders followed by another order from the same customer within 90 days.
+// Orders from the last 90 days of data are excluded (not enough time to observe).
+VAR _cutoff =
+    CALCULATE ( MAX ( Orders[order_date] ), REMOVEFILTERS () ) - 90
+VAR _base =
+    FILTER ( Orders, Orders[order_date] <= _cutoff )
+VAR _reordered =
+    FILTER (
+        _base,
+        NOT ISBLANK ( Orders[Days To Next Order] )
+            && Orders[Days To Next Order] <= 90
+    )
+RETURN
+    DIVIDE ( COUNTROWS ( _reordered ), COUNTROWS ( _base ) )
+
+Reorder Rate 90d - Good Experience =
+CALCULATE ( [Reorder Rate 90d], Orders[Experience Group] = "Good experience" )
+
+Reorder Rate 90d - Bad Experience =
+CALCULATE ( [Reorder Rate 90d], Orders[Experience Group] = "3+ days late or cancelled" )
+
+Reorder Gap (pp) =                            // [Decimal, 1 dp]
+( [Reorder Rate 90d - Good Experience] - [Reorder Rate 90d - Bad Experience] ) * 100
+
+
+// ---------------------------------------------------------------------
+// Folder: 5 Inventory
+// ---------------------------------------------------------------------
+
+Demand Units =
+SUM ( Inventory[demand_units] )
+
+Lost Sales Units =
+SUM ( Inventory[lost_sales_units] )
+
+Lost Sales Revenue =                          // [Currency €, 0 dp]
+SUMX ( Inventory, Inventory[lost_sales_units] * RELATED ( Products[unit_price_eur] ) )
+
+Fill Rate % =                                 // [Percentage, 1 dp]  share of demand served from stock
+DIVIDE ( SUM ( Inventory[units_fulfilled] ), [Demand Units] )
+
+Stockout Week % =                             // [Percentage, 1 dp]  product-warehouse-weeks with a stockout
+AVERAGE ( Inventory[stockout_flag] )
+
+Avg Closing Stock =                           // [Whole number]
+AVERAGE ( Inventory[closing_stock_units] )
+
+Avg Actual Lead Time (days) =                 // [Decimal, 1 dp]
+AVERAGE ( Products[actual_supplier_lead_time_days] )
+
+Avg Planning Lead Time (days) =               // [Decimal, 1 dp]
+AVERAGE ( Products[planning_lead_time_days] )
+
+Lead Time Gap (days) =                        // [Decimal, 1 dp]  how much the ERP underestimates suppliers
+[Avg Actual Lead Time (days)] - [Avg Planning Lead Time (days)]
+
+
+// ---------------------------------------------------------------------
+// Folder: 6 What-if  (carrier mix scenario)
+// First create the parameter:
+//   Modeling > New parameter > Numeric range
+//   Name: Shift From CargoWay | Data type: Decimal | Min 0 | Max 1 | Increment 0.05 | Default 0.5
+//   This creates the table, its slicer and the measure [Shift From CargoWay Value].
+// ---------------------------------------------------------------------
+
+CargoWay Orders =
+CALCULATE ( [Total Orders], REMOVEFILTERS ( Carriers ), Carriers[carrier_name] = "CargoWay" )
+
+CargoWay True Cost per Order =
+CALCULATE ( [True Cost per Order], REMOVEFILTERS ( Carriers ), Carriers[carrier_name] = "CargoWay" )
+
+NordLogistik True Cost per Order =
+CALCULATE ( [True Cost per Order], REMOVEFILTERS ( Carriers ), Carriers[carrier_name] = "NordLogistik" )
+
+Projected Annual Savings =                    // [Currency €, 0 dp]
+// Moving X% of CargoWay volume to NordLogistik, per year in the selected period
+VAR _years = MAX ( 1, DISTINCTCOUNT ( 'Date'[Year] ) )
+VAR _shifted = [CargoWay Orders] * [Shift From CargoWay Value]
+RETURN
+    DIVIDE ( _shifted * ( [CargoWay True Cost per Order] - [NordLogistik True Cost per Order] ), _years )
+
+Projected Late Orders Avoided per Year =      // [Whole number]
+VAR _years = MAX ( 1, DISTINCTCOUNT ( 'Date'[Year] ) )
+VAR _cw  = CALCULATE ( [Late Delivery %], REMOVEFILTERS ( Carriers ), Carriers[carrier_name] = "CargoWay" )
+VAR _nl  = CALCULATE ( [Late Delivery %], REMOVEFILTERS ( Carriers ), Carriers[carrier_name] = "NordLogistik" )
+RETURN
+    DIVIDE ( [CargoWay Orders] * [Shift From CargoWay Value] * ( _cw - _nl ), _years )
+
+
+// ---------------------------------------------------------------------
+// Folder: 7 Formatting helpers
+// ---------------------------------------------------------------------
+
+OTD Color =                                   // use in Conditional formatting > Field value
+SWITCH (
+    TRUE (),
+    [On-Time Delivery %] >= 0.90, "#1B7F5A",
+    [On-Time Delivery %] >= 0.80, "#E0A100",
+    "#C8102E"
+)
+
+Dynamic Title - Delivery =
+"On-time delivery: " & FORMAT ( [On-Time Delivery %], "0.0%" )
+    & "  |  " & FORMAT ( [Late Orders], "#,0" ) & " late orders"

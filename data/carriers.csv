@@ -1,0 +1,5 @@
+carrier_id,carrier_name,service_level,promised_transit_days,avg_cost_per_shipment_eur
+CR-01,SwiftFreight,Premium,2,7.9
+CR-02,NordLogistik,Standard,3,5.4
+CR-03,ExpressLine,Standard,3,5.1
+CR-04,CargoWay,Economy,4,3.6

@@ -1,0 +1,6 @@
+warehouse_id,warehouse_city,warehouse_state,service_region,daily_capacity_orders
+WH-BER,Berlin,Berlin,East,1400
+WH-HAM,Hamburg,Hamburg,North,1300
+WH-MUC,Munich,Bavaria,South,1350
+WH-FRA,Frankfurt,Hesse,West,1450
+WH-LEJ,Leipzig,Saxony,East,700

@@ -1,0 +1,26 @@
+// =====================================================================
+// Calculated columns on the Orders table (Table view > Orders > New column)
+// Used for the "do late deliveries make customers stop buying?" analysis.
+// =====================================================================
+
+// Next date (strictly later) on which the same customer ordered again
+Next Order Date =
+VAR _thisDate = Orders[order_date]
+RETURN
+    CALCULATE (
+        MIN ( Orders[order_date] ),
+        ALLEXCEPT ( Orders, Orders[customer_id] ),
+        Orders[order_date] > _thisDate
+    )
+
+// Days until that next order (blank if the customer never ordered again)
+Days To Next Order =
+IF (
+    ISBLANK ( Orders[Next Order Date] ),
+    BLANK (),
+    DATEDIFF ( Orders[order_date], Orders[Next Order Date], DAY )
+)
+
+// Simple order-level net sales (handy for tooltips / tables)
+Order Net Sales =
+SUMX ( RELATEDTABLE ( OrderLines ), OrderLines[Line Net Sales] )

@@ -1,0 +1,121 @@
+product_id,product_name,category,supplier,unit_price_eur,unit_cost_eur,actual_supplier_lead_time_days,planning_lead_time_days
+P0001,Electronics SKU 0001,Electronics,Shenzhen TechSource,442.3,326.59,36,9
+P0002,Electronics SKU 0002,Electronics,EuroComponents BV,832.79,653.83,35,9
+P0003,Electronics SKU 0003,Electronics,EuroComponents BV,124.83,101.25,33,9
+P0004,Electronics SKU 0004,Electronics,EuroComponents BV,79.55,63.22,24,9
+P0005,Electronics SKU 0005,Electronics,Shenzhen TechSource,420.82,316.78,38,9
+P0006,Electronics SKU 0006,Electronics,Shenzhen TechSource,71.82,57.55,24,9
+P0007,Electronics SKU 0007,Electronics,Shenzhen TechSource,403.59,308.24,28,9
+P0008,Electronics SKU 0008,Electronics,EuroComponents BV,70.66,54.79,31,9
+P0009,Electronics SKU 0009,Electronics,EuroComponents BV,153.72,123.24,36,9
+P0010,Electronics SKU 0010,Electronics,EuroComponents BV,96.37,78.53,26,9
+P0011,Electronics SKU 0011,Electronics,Shenzhen TechSource,460.67,370.96,34,9
+P0012,Electronics SKU 0012,Electronics,Shenzhen TechSource,232.31,178.65,25,9
+P0013,Electronics SKU 0013,Electronics,EuroComponents BV,229.77,176.14,33,9
+P0014,Electronics SKU 0014,Electronics,Shenzhen TechSource,101.21,77.53,30,9
+P0015,Electronics SKU 0015,Electronics,EuroComponents BV,567.53,416.95,24,9
+P0016,Electronics SKU 0016,Electronics,EuroComponents BV,311.2,237.42,35,9
+P0017,Electronics SKU 0017,Electronics,Shenzhen TechSource,501.55,377.93,24,9
+P0018,Electronics SKU 0018,Electronics,EuroComponents BV,166.13,126.46,31,9
+P0019,Electronics SKU 0019,Electronics,Shenzhen TechSource,158.13,122.72,28,9
+P0020,Electronics SKU 0020,Electronics,Shenzhen TechSource,51.34,37.33,38,9
+P0021,Electronics SKU 0021,Electronics,Shenzhen TechSource,89.81,74.72,35,9
+P0022,Electronics SKU 0022,Electronics,Shenzhen TechSource,91.62,67.98,37,9
+P0023,Home SKU 0023,Home & Kitchen,Nordic Living AB,30.34,19.1,7,9
+P0024,Home SKU 0024,Home & Kitchen,HausWerk GmbH,106.34,66.92,10,9
+P0025,Home SKU 0025,Home & Kitchen,Nordic Living AB,15.49,9.71,6,9
+P0026,Home SKU 0026,Home & Kitchen,HausWerk GmbH,18.59,12.61,10,9
+P0027,Home SKU 0027,Home & Kitchen,Nordic Living AB,69.89,39.48,10,9
+P0028,Home SKU 0028,Home & Kitchen,HausWerk GmbH,51.8,32.77,6,9
+P0029,Home SKU 0029,Home & Kitchen,Nordic Living AB,206.2,119.68,9,9
+P0030,Home SKU 0030,Home & Kitchen,HausWerk GmbH,58.19,34.65,6,9
+P0031,Home SKU 0031,Home & Kitchen,HausWerk GmbH,18.35,10.62,6,9
+P0032,Home SKU 0032,Home & Kitchen,Nordic Living AB,88.63,61.22,11,9
+P0033,Home SKU 0033,Home & Kitchen,HausWerk GmbH,24.11,14.02,9,9
+P0034,Home SKU 0034,Home & Kitchen,HausWerk GmbH,139.2,81.28,12,9
+P0035,Home SKU 0035,Home & Kitchen,HausWerk GmbH,26.07,15.48,7,9
+P0036,Home SKU 0036,Home & Kitchen,HausWerk GmbH,243.3,152.53,11,9
+P0037,Home SKU 0037,Home & Kitchen,HausWerk GmbH,57.87,38.9,11,9
+P0038,Home SKU 0038,Home & Kitchen,HausWerk GmbH,15.97,10.88,7,9
+P0039,Home SKU 0039,Home & Kitchen,Nordic Living AB,17.4,11.99,7,9
+P0040,Home SKU 0040,Home & Kitchen,HausWerk GmbH,170.2,115.09,8,9
+P0041,Home SKU 0041,Home & Kitchen,Nordic Living AB,54.78,33.61,6,9
+P0042,Home SKU 0042,Home & Kitchen,HausWerk GmbH,93.67,50.39,9,9
+P0043,Home SKU 0043,Home & Kitchen,HausWerk GmbH,21.98,13.33,11,9
+P0044,Home SKU 0044,Home & Kitchen,HausWerk GmbH,17.45,11.16,8,9
+P0045,Home SKU 0045,Home & Kitchen,Nordic Living AB,89.56,60.32,8,9
+P0046,Home SKU 0046,Home & Kitchen,Nordic Living AB,64.61,40.51,6,9
+P0047,Fashion SKU 0047,Fashion,Istanbul Textiles,146.81,81.49,14,11
+P0048,Fashion SKU 0048,Fashion,Porto Apparel Lda,95.65,47.12,7,11
+P0049,Fashion SKU 0049,Fashion,Porto Apparel Lda,25.97,12.3,11,11
+P0050,Fashion SKU 0050,Fashion,Porto Apparel Lda,40.99,19.52,13,11
+P0051,Fashion SKU 0051,Fashion,Porto Apparel Lda,26.22,11.44,13,11
+P0052,Fashion SKU 0052,Fashion,Istanbul Textiles,61.02,30.12,13,11
+P0053,Fashion SKU 0053,Fashion,Istanbul Textiles,131.93,65.62,9,11
+P0054,Fashion SKU 0054,Fashion,Istanbul Textiles,15.76,7.4,8,11
+P0055,Fashion SKU 0055,Fashion,Porto Apparel Lda,74.81,36.37,9,11
+P0056,Fashion SKU 0056,Fashion,Istanbul Textiles,111.87,55.11,8,11
+P0057,Fashion SKU 0057,Fashion,Istanbul Textiles,57.77,28.62,7,11
+P0058,Fashion SKU 0058,Fashion,Porto Apparel Lda,16.95,8.46,7,11
+P0059,Fashion SKU 0059,Fashion,Porto Apparel Lda,151.5,69.86,13,11
+P0060,Fashion SKU 0060,Fashion,Istanbul Textiles,20.6,9.68,11,11
+P0061,Fashion SKU 0061,Fashion,Istanbul Textiles,37.22,18.13,9,11
+P0062,Fashion SKU 0062,Fashion,Istanbul Textiles,40.13,22.04,9,11
+P0063,Fashion SKU 0063,Fashion,Istanbul Textiles,36.73,16.08,9,11
+P0064,Fashion SKU 0064,Fashion,Istanbul Textiles,46.67,24.6,11,11
+P0065,Fashion SKU 0065,Fashion,Porto Apparel Lda,100.18,46.9,12,11
+P0066,Fashion SKU 0066,Fashion,Porto Apparel Lda,24.18,12.36,13,11
+P0067,Fashion SKU 0067,Fashion,Porto Apparel Lda,18.77,10.38,7,11
+P0068,Fashion SKU 0068,Fashion,Istanbul Textiles,144.28,66.26,11,11
+P0069,Fashion SKU 0069,Fashion,Porto Apparel Lda,139.97,67.37,11,11
+P0070,Fashion SKU 0070,Fashion,Istanbul Textiles,22.47,11.82,11,11
+P0071,Fashion SKU 0071,Fashion,Porto Apparel Lda,91.05,45.21,10,11
+P0072,Fashion SKU 0072,Fashion,Porto Apparel Lda,18.44,9.12,10,11
+P0073,Beauty SKU 0073,Beauty,Alpine Care AG,13.54,6.22,9,8
+P0074,Beauty SKU 0074,Beauty,Alpine Care AG,12.92,5.74,5,8
+P0075,Beauty SKU 0075,Beauty,Lyon Cosmetique,15.29,7.79,8,8
+P0076,Beauty SKU 0076,Beauty,Alpine Care AG,19.34,8.71,10,8
+P0077,Beauty SKU 0077,Beauty,Alpine Care AG,8.0,4.34,8,8
+P0078,Beauty SKU 0078,Beauty,Lyon Cosmetique,32.04,14.56,7,8
+P0079,Beauty SKU 0079,Beauty,Lyon Cosmetique,18.38,7.69,6,8
+P0080,Beauty SKU 0080,Beauty,Lyon Cosmetique,7.85,2.81,10,8
+P0081,Beauty SKU 0081,Beauty,Alpine Care AG,7.77,3.54,5,8
+P0082,Beauty SKU 0082,Beauty,Alpine Care AG,10.79,4.78,9,8
+P0083,Beauty SKU 0083,Beauty,Lyon Cosmetique,29.79,13.09,5,8
+P0084,Beauty SKU 0084,Beauty,Lyon Cosmetique,42.48,16.6,10,8
+P0085,Beauty SKU 0085,Beauty,Alpine Care AG,57.83,26.48,9,8
+P0086,Beauty SKU 0086,Beauty,Alpine Care AG,9.81,4.95,8,8
+P0087,Beauty SKU 0087,Beauty,Lyon Cosmetique,36.08,14.95,6,8
+P0088,Beauty SKU 0088,Beauty,Lyon Cosmetique,26.71,12.44,8,8
+P0089,Beauty SKU 0089,Beauty,Lyon Cosmetique,33.94,16.53,5,8
+P0090,Beauty SKU 0090,Beauty,Lyon Cosmetique,18.38,8.59,8,8
+P0091,Sports SKU 0091,Sports,ActiveGear Poland,277.44,162.66,12,12
+P0092,Sports SKU 0092,Sports,ActiveGear Poland,272.73,167.82,12,12
+P0093,Sports SKU 0093,Sports,Taipei Sports Mfg,20.39,12.29,10,12
+P0094,Sports SKU 0094,Sports,Taipei Sports Mfg,96.34,57.7,11,12
+P0095,Sports SKU 0095,Sports,Taipei Sports Mfg,89.68,49.8,8,12
+P0096,Sports SKU 0096,Sports,ActiveGear Poland,28.53,16.02,12,12
+P0097,Sports SKU 0097,Sports,ActiveGear Poland,109.8,68.6,14,12
+P0098,Sports SKU 0098,Sports,Taipei Sports Mfg,101.02,71.11,12,12
+P0099,Sports SKU 0099,Sports,Taipei Sports Mfg,256.41,153.26,12,12
+P0100,Sports SKU 0100,Sports,Taipei Sports Mfg,196.89,123.38,14,12
+P0101,Sports SKU 0101,Sports,Taipei Sports Mfg,40.19,23.62,10,12
+P0102,Sports SKU 0102,Sports,ActiveGear Poland,190.64,102.98,10,12
+P0103,Sports SKU 0103,Sports,Taipei Sports Mfg,20.42,9.83,15,12
+P0104,Sports SKU 0104,Sports,ActiveGear Poland,37.36,23.11,13,12
+P0105,Sports SKU 0105,Sports,Taipei Sports Mfg,14.47,9.14,12,12
+P0106,Sports SKU 0106,Sports,Taipei Sports Mfg,196.22,130.52,12,12
+P0107,Media SKU 0107,Books & Media,Leipziger Verlagsvertrieb,10.33,7.81,8,6
+P0108,Media SKU 0108,Books & Media,Leipziger Verlagsvertrieb,17.55,13.38,5,6
+P0109,Media SKU 0109,Books & Media,Leipziger Verlagsvertrieb,41.4,29.73,7,6
+P0110,Media SKU 0110,Books & Media,Leipziger Verlagsvertrieb,23.15,13.99,5,6
+P0111,Media SKU 0111,Books & Media,Leipziger Verlagsvertrieb,36.89,26.19,6,6
+P0112,Media SKU 0112,Books & Media,Leipziger Verlagsvertrieb,8.88,5.86,7,6
+P0113,Media SKU 0113,Books & Media,Leipziger Verlagsvertrieb,36.95,26.69,6,6
+P0114,Media SKU 0114,Books & Media,Leipziger Verlagsvertrieb,41.58,27.85,7,6
+P0115,Media SKU 0115,Books & Media,Leipziger Verlagsvertrieb,19.75,13.42,6,6
+P0116,Media SKU 0116,Books & Media,Leipziger Verlagsvertrieb,25.09,16.79,4,6
+P0117,Media SKU 0117,Books & Media,Leipziger Verlagsvertrieb,8.36,5.63,7,6
+P0118,Media SKU 0118,Books & Media,Leipziger Verlagsvertrieb,8.1,5.75,6,6
+P0119,Media SKU 0119,Books & Media,Leipziger Verlagsvertrieb,47.4,35.71,8,6
+P0120,Media SKU 0120,Books & Media,Leipziger Verlagsvertrieb,29.53,19.31,6,6
